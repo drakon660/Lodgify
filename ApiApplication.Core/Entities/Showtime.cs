@@ -30,11 +30,20 @@ namespace ApiApplication.Core.Entities
             Movie = movie;
             SessionDate = sessionDate;
             Auditorium = auditorium;
+            AuditoriumId = auditorium.Id;
         }
 
-        public static Showtime Create(Movie movie, DateTime sessionDate, Auditorium auditorium) =>
-            new(movie, sessionDate, auditorium);
-        
+        public static Result<Showtime> Create(Movie movie, DateTime sessionDate, Auditorium auditorium)
+        {
+            bool isFree = auditorium.IsFreeForShowtime(sessionDate, movie.LengthInMinutes);
+
+            if (isFree)
+            {
+                return new Showtime(movie, sessionDate, auditorium);    
+            }
+
+            return Result.Failure<Showtime>("showtime is overlapping");
+        }
         
         public Result<Reservation> ReserveSeats(ICollection<Position> positionsToSeat, DateTime reservationDate)
         {

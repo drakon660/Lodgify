@@ -9,20 +9,22 @@
         public DateTime ReleaseDate { get; protected set; }
         public List<Showtime> Showtimes { get; set; }
 
+        public int LengthInMinutes { get; protected set; }
         protected Movie()
         {
             
         }
         
-        private Movie(string title, string imdbId, string stars, DateTime releaseDate)
+        private Movie(string title, string imdbId, string stars, DateTime releaseDate, int lengthInMinutes)
         {
             Title = title;
             ImdbId = imdbId;
             Stars = stars;
             ReleaseDate = releaseDate;
+            LengthInMinutes = lengthInMinutes;
         }
 
-        public static Movie Create(string title, string imdbId, string stars, DateTime releaseDate) =>
-            new(title, imdbId, stars, releaseDate);
+        public static Movie Create(string title, string imdbId, string stars, DateTime releaseDate, int lengthInMinutes) =>
+            new(title, imdbId, stars, releaseDate, lengthInMinutes);
     }
 }

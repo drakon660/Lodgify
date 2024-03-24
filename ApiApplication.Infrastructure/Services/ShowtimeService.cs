@@ -4,6 +4,7 @@ using ApiApplication.Core.Repositories;
 using ApiApplication.Core.Services;
 using ApiApplication.Core.ValueObjects;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 
 namespace ApiApplication.Infrastructure.Services;
 
@@ -32,17 +33,23 @@ public class ShowtimeService : IShowtimeService
 
 
     //Add Validation
-    public async Task CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
+    public async Task<Result<ShowtimeDto>> CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
     {
         var movie = await _movieRepository.GetById(createShowtimeDto.MovieId, cancellationToken);
         var auditorium = await _auditoriumsRepository.GetById(createShowtimeDto.AuditoriumId, cancellationToken);
 
-        Showtime showtime = Showtime.Create(movie, createShowtimeDto.SessionDate, auditorium);
+        var showtimeResult = Showtime.Create(movie, createShowtimeDto.SessionDate, auditorium);
 
-        await _showtimeRepository.CreateShowtime(showtime, cancellationToken);
+        if (showtimeResult.IsSuccess)
+        {
+            await _showtimeRepository.CreateShowtime(showtimeResult.Value, cancellationToken);
+            return _mapper.Map<ShowtimeDto>(showtimeResult.Value);
+        }
+
+        return Result.Failure<ShowtimeDto>(showtimeResult.Error);
     }
 
-    public async Task<ReservationDto> BookShowtime(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
+    public async Task<ReservationDto> ReserveShowtime(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
     {
         var showTime = await _showtimeRepository.GetById(createReservationDto.ShowTimeId, cancellationToken);
 

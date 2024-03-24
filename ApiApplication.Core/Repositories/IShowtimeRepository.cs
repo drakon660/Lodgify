@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using ApiApplication.Core.Entities;
+﻿using ApiApplication.Core.Entities;
 
 namespace ApiApplication.Core.Repositories
 {
@@ -8,7 +7,7 @@ namespace ApiApplication.Core.Repositories
         Task CreateShowtime(Showtime showtime, CancellationToken cancel);
         Task UpdateShowtime(Showtime showtime, CancellationToken cancel);
 
-        ValueTask<Showtime> GetById(int id, CancellationToken cancellationToken);
+        Task<Showtime> GetById(int id, CancellationToken cancellationToken);
         Task<IEnumerable<Showtime>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

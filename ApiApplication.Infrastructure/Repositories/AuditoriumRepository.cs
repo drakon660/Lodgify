@@ -17,7 +17,7 @@ public class AuditoriumsRepository : IAuditoriumsRepository
 
     public async Task<IEnumerable<Auditorium>> GetAll(CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums.ToListAsync(cancellationToken);
+        return await _context.Auditoriums.Include(x=>x.Seats).ToListAsync(cancellationToken);
     }
 
     public async Task<Auditorium> GetById(int auditoriumId, CancellationToken cancellationToken)

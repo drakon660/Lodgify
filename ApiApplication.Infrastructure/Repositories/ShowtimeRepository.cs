@@ -24,13 +24,14 @@ public class ShowtimeRepository : IShowtimeRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public ValueTask<Showtime> GetById(int id, CancellationToken cancellationToken)
+    public async Task<Showtime> GetById(int id, CancellationToken cancellationToken)
     {
-        return _context.Showtimes.FindAsync(id, cancellationToken);
+        return await _context.Showtimes.Include(x => x.Auditorium).FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<Showtime>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _context.Showtimes.ToListAsync(cancellationToken);
+        return await _context.Showtimes.Include(x=>x.Auditorium)
+            .Include(x=>x.Movie).ToListAsync(cancellationToken);
     }
 }

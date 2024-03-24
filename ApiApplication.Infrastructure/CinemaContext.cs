@@ -21,20 +21,15 @@ namespace ApiApplication.Infrastructure
             {
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
-                build.HasMany(entry => entry.Showtimes).WithOne().HasForeignKey(entity => entity.AuditoriumId);
+                build.HasMany(x => x.Seats).WithOne(x=>x.Auditorium).Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
+                //build.HasMany(entry => entry.Showtimes).WithOne().HasForeignKey(entity => entity.AuditoriumId);
             });
-            
-            // modelBuilder.Entity<Seat>(build =>
-            // {
-            //     build.HasKey(entry => new { entry.AuditoriumId, Row = entry.RowNumber, entry.SeatNumber });
-            //     build.HasOne(entry => entry.Auditorium).WithMany(entry => entry.Seats).HasForeignKey(entry => entry.AuditoriumId);
-            // });
-            //
 
             modelBuilder.Entity<Seat>(build =>
             {
                 build.HasKey(x => x.Id);
                 build.Property(x => x.Id).ValueGeneratedOnAdd();
+                build.HasOne(entry => entry.Auditorium).WithMany(entry => entry.Seats);
                 build.ComplexProperty(x => x.Position).IsRequired();
             });
             
@@ -42,7 +37,7 @@ namespace ApiApplication.Infrastructure
             {
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
-                build.HasOne(x => x.Auditorium).WithMany(x => x.Showtimes);
+                build.HasOne(x => x.Auditorium).WithMany(x => x.Showtimes).HasForeignKey(x=>x.AuditoriumId);
                 build.HasOne(entry => entry.Movie).WithMany(entry => entry.Showtimes);
                 build.HasMany(entry => entry.Tickets).WithOne(entry => entry.Showtime).HasForeignKey(entry => entry.ShowtimeId);
             });

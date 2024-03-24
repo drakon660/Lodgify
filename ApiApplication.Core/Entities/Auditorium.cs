@@ -6,23 +6,26 @@ namespace ApiApplication.Core.Entities
     {
         public int Id { get; protected set; }
         public string Name { get; protected set; }
-        public List<Showtime> Showtimes { get; protected set; }
-        public IEnumerable<Seat> Seats { get; protected set; }
+
+        private readonly List<Showtime> _showtimes = new();
+        public virtual IReadOnlyList<Showtime> Showtimes => _showtimes.ToList();
+        
+        private readonly List<Seat> _seats = new();
+        public virtual IReadOnlyList<Seat> Seats => _seats.ToList(); 
 
         protected Auditorium()
         {
             
         }
 
-        private Auditorium(string name, IEnumerable<Seat> seats)
+        private Auditorium(string name)
         {
             Name = name;
-            foreach (var seat in seats)
-            {
-                seat.SetAuditorium(this);
-            }
-            
-            Seats = seats;
+        }
+
+        public void SetSeats(IEnumerable<Seat> seats)
+        {
+            _seats.AddRange(seats); 
         }
 
         public (bool AllSeatsFound, ICollection<Seat> Seats) HasSeatsOn(ICollection<Position> positions)
@@ -37,7 +40,22 @@ namespace ApiApplication.Core.Entities
             return (false, null);
         }
         
-        public static Auditorium Create(string name, IEnumerable<Seat> seats) => new(name, seats);
+        public static Auditorium Create(string name) => new(name);
+        
+        // If the requested session starts during an existing showtime.
+        // If the requested session ends during an existing showtime.
+        // If the existing showtime falls completely within the requested session.
+        public bool IsFreeForShowtime(DateTime sessionDate, int movieLengthInMinutes)
+        {
+            var endDate = sessionDate.AddMinutes(movieLengthInMinutes);
+            
+            bool isFree = !Showtimes.Any(showtime =>
+                (sessionDate >= showtime.SessionDate && sessionDate < showtime.SessionDate.AddMinutes(movieLengthInMinutes)) ||
+                (endDate > showtime.SessionDate && endDate <= showtime.SessionDate.AddMinutes(movieLengthInMinutes)) ||
+                (sessionDate <= showtime.SessionDate && endDate >= showtime.SessionDate.AddMinutes(movieLengthInMinutes)));
+
+            return isFree;
+        }
         
         public Seat this[ushort rowNumber, ushort seatNumber]
         {

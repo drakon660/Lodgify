@@ -13,7 +13,7 @@ public static class Utils
         {
             for (ushort col = 1; col <= seatsPerRowCount; col++)
             {
-                seats.Add(Seat.Create(Position.Create(row,col), auditorium:null));
+                seats.Add(Seat.Create(Position.Create(row,col)));
             }
         }
 

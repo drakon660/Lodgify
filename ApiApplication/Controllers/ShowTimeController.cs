@@ -31,10 +31,10 @@ public class ShowTimeController : ControllerBase
         return Ok();
     }
 
-    // [HttpPost("book-showtime")]
-    // public async Task<IActionResult> CreateReservation(CreateBookingDto bookingDto)
-    // {
-    //     await _showtimeService.BookShowtime(bookingDto);
-    //     return Ok();
-    // }
+    [HttpPost("reserve-showtime")]
+    public async Task<IActionResult> CreateReservation(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
+    {
+        await _showtimeService.ReserveShowtime(createReservationDto, cancellationToken);
+        return Ok();
+    }
 }

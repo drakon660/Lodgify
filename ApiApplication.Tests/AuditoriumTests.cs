@@ -12,8 +12,10 @@ public class AuditoriumTests
     {
         Auditorium auditorium = Auditorium.Create("Atlas", Utils.Generate(7,9));
 
+        
+        
         var seatsResult = auditorium.HasSeatsOn([Position.Create(7, 5),Position.Create(7, 10)]);
 
-        seatsResult.AllSeatsFound.Should().BeTrue();
+        seatsResult.AllSeatsFound.Should().BeFalse();
     }
 }

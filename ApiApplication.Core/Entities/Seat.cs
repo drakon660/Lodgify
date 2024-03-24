@@ -6,26 +6,20 @@ namespace ApiApplication.Core.Entities
     {
         public Guid Id { get; protected set; }
         public Position Position { get; protected set; }
-        public int AuditoriumId { get; protected set; }
-        public Auditorium Auditorium { get; protected set; }
 
+        public virtual Auditorium Auditorium { get; protected set; }
+        
         protected Seat()
         {
             
         }
         
-        private Seat(Position position, Auditorium auditorium)
+        private Seat(Position position)
         {
             Position = position;
-            Auditorium = auditorium;
-        }
-
-        public void SetAuditorium(Auditorium auditorium)
-        {
-            Auditorium = auditorium;
         }
         
-        public static Seat Create(Position position, Auditorium auditorium) => new(position, auditorium);
+        public static Seat Create(Position position) => new(position);
         
     }
 }
