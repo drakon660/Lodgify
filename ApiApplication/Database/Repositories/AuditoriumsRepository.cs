@@ -1,8 +1,8 @@
-﻿using ApiApplication.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
-using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Core.Entities;
+using ApiApplication.Core.Repositories;
 
 namespace ApiApplication.Database.Repositories
 {
@@ -15,7 +15,7 @@ namespace ApiApplication.Database.Repositories
             _context = context;
         }
 
-        public async Task<AuditoriumEntity> GetAsync(int auditoriumId, CancellationToken cancel)
+        public async Task<Auditorium> GetAsync(int auditoriumId, CancellationToken cancel)
         {
             return await _context.Auditoriums
                 .Include(x => x.Seats)

@@ -1,11 +1,11 @@
-﻿using ApiApplication.Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Linq;
-using ApiApplication.Database.Repositories.Abstractions;
+using ApiApplication.Core.Entities;
+using ApiApplication.Core.Repositories;
 
 namespace ApiApplication.Database.Repositories
 {
@@ -18,12 +18,12 @@ namespace ApiApplication.Database.Repositories
             _context = context;
         }
 
-        public Task<TicketEntity> GetAsync(Guid id, CancellationToken cancel)
+        public Task<Ticket> GetAsync(Guid id, CancellationToken cancel)
         {
             return _context.Tickets.FirstOrDefaultAsync(x => x.Id == id, cancel);
         }
 
-        public async Task<IEnumerable<TicketEntity>> GetEnrichedAsync(int showtimeId, CancellationToken cancel)
+        public async Task<IEnumerable<Ticket>> GetEnrichedAsync(int showtimeId, CancellationToken cancel)
         {
             return await _context.Tickets
                 .Include(x => x.Showtime)
@@ -32,20 +32,21 @@ namespace ApiApplication.Database.Repositories
                 .ToListAsync(cancel);
         }
 
-        public async Task<TicketEntity> CreateAsync(ShowtimeEntity showtime, IEnumerable<SeatEntity> selectedSeats, CancellationToken cancel)
+        public async Task<Ticket> CreateAsync(Showtime showtime, IEnumerable<Seat> selectedSeats, CancellationToken cancel)
         {
-            var ticket = _context.Tickets.Add(new TicketEntity
-            {
-                Showtime = showtime,
-                Seats = new List<SeatEntity>(selectedSeats)
-            });
-
-            await _context.SaveChangesAsync(cancel);
-
-            return ticket.Entity;
+            throw new NotImplementedException();
+            // var ticket = _context.Tickets.Add(new Ticket
+            // {
+            //     Showtime = showtime,
+            //     Seats = new List<Seat>(selectedSeats)
+            // });
+            //
+            // await _context.SaveChangesAsync(cancel);
+            //
+            // return ticket.Entity;
         }
 
-        public async Task<TicketEntity> ConfirmPaymentAsync(TicketEntity ticket, CancellationToken cancel)
+        public async Task<Ticket> ConfirmPaymentAsync(Ticket ticket, CancellationToken cancel)
         {
             ticket.Paid = true;
             _context.Update(ticket);

@@ -26,5 +26,5 @@ namespace ApiApplication
                     });
                     webBuilder.UseStartup<Startup>();                    
                 });
-    }
+           }
 }

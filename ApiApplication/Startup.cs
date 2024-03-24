@@ -1,6 +1,6 @@
+using ApiApplication.Core.Repositories;
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
-using ApiApplication.Database.Repositories.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,7 @@ namespace ApiApplication
                 endpoints.MapControllers();
             });
 
-            SampleData.Initialize(app);
+            //SampleData.Initialize(app);
         }      
     }
 }
