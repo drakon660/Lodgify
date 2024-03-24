@@ -1,6 +1,6 @@
-﻿using ApiApplication.Core.Entities;
+﻿
+using ApiApplication.Core.Entities;
 using ApiApplication.Core.Repositories;
-using ApiApplication.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiApplication.Infrastructure.Repositories;
@@ -13,12 +13,11 @@ public class AuditoriumsRepository : IAuditoriumsRepository
     {
         _context = context;
     }
+    
 
-    public async Task<Auditorium> GetAsync(int auditoriumId, CancellationToken cancel)
+    public async Task<IEnumerable<Auditorium>> GetAll(CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums
-            .Include(x => x.Seats)
-            .FirstOrDefaultAsync(x => x.Id == auditoriumId, cancel);
+        return await _context.Auditoriums.ToListAsync(cancellationToken);
     }
 
     public async Task<Auditorium> GetById(int auditoriumId, CancellationToken cancellationToken)

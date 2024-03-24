@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using ApiApplication.Core.Entities;
+﻿using ApiApplication.Core.Entities;
 using ApiApplication.Core.Repositories;
-using ApiApplication.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiApplication.Infrastructure.Repositories;
@@ -21,33 +19,18 @@ public class ShowtimeRepository : IShowtimeRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Showtime> GetByMovieTitleAsync(string movieTitle)
+    public async Task UpdateShowtime(Showtime showtime, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Showtime> UpdateShowTime(Showtime showtime)
+    public ValueTask<Showtime> GetById(int id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Showtime>> GetAllAsync(Expression<Func<Showtime, bool>> filter, CancellationToken cancel)
-    {
-        throw new NotImplementedException();
+        return _context.Showtimes.FindAsync(id, cancellationToken);
     }
 
     public async Task<IEnumerable<Showtime>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _context.Showtimes.Include(x => x.Auditorium).Include(x => x.Movie).ToListAsync(cancellationToken);
-    }
-
-    public Task<Showtime> GetWithMoviesByIdAsync(int id, CancellationToken cancel)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Showtime> GetWithTicketsByIdAsync(int id, CancellationToken cancel)
-    {
-        throw new NotImplementedException();
+        return await _context.Showtimes.ToListAsync(cancellationToken);
     }
 }

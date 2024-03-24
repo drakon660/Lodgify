@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using ApiApplication.Core.ValueObjects;
+using CSharpFunctionalExtensions;
 
 namespace ApiApplication.Core.Entities
 {
@@ -35,11 +36,16 @@ namespace ApiApplication.Core.Entities
             new(movie, sessionDate, auditorium);
         
         
-        public Result<Reservation> ReserveSeats(ICollection<Seat> seats, DateTime reservationDate)
+        public Result<Reservation> ReserveSeats(ICollection<Position> positionsToSeat, DateTime reservationDate)
         {
+            var seatsResults = Auditorium.HasSeatsOn(positionsToSeat);
+
+            if (!seatsResults.AllSeatsFound)
+                return Result.Failure<Reservation>("seats outside Auditorium");
+
             var tickets = _tickets.Where(x =>
             {
-                var (haveSeats, _) = x.ContainsSeats(seats);
+                var (haveSeats, _) = x.ContainsSeats(seatsResults.Seats);
                 return haveSeats;
             });
 
@@ -48,12 +54,12 @@ namespace ApiApplication.Core.Entities
                 return Result.Failure<Reservation>("seat sold");
             }
             
-            var reservations = _reservations.Where(x => x.ContainsSeatsNumbers(seats).Any());
+            var reservations = _reservations.Where(x => x.ContainsSeatsNumbers(seatsResults.Seats).Any());
             
             if(reservations.Any())
                 return Result.Failure<Reservation>("seat already reserved");
             
-            var reservationResult = Reservation.Create(this, seats, reservationDate);
+            var reservationResult = Reservation.Create(this, seatsResults.Seats, reservationDate);
 
             if(reservationResult.IsSuccess)
                 _reservations.Add(reservationResult.Value);

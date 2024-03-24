@@ -4,7 +4,7 @@ namespace ApiApplication.Core.Entities;
 
 public class Reservation
 {
-    public Guid Id { get;protected set; }
+    public Guid Id { get; protected set; }
     public DateTime CreatedAtUtc { get; protected set; }
     public Showtime Showtime { get; protected set; }
     public bool IsExpired(DateTime currentDate) => CreatedAtUtc.AddMinutes(10) < currentDate;

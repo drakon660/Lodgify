@@ -9,6 +9,26 @@ namespace ApiApplication.Tests;
 public class ReservationSeatsTests
 {
     [Fact]
+    public void Check_If_User_Cannot_Buy_Tickets_Outside_Auditorium()
+    {
+        var movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
+            new DateTime(1995, 06, 06));
+        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var showTime = Showtime.Create(movie, new DateTime(2020, 01, 01), auditorium);
+
+        var seats = new List<Position>()
+        {
+            Position.Create(4, 7),
+            Position.Create(4, 8),
+            //Position.Create(15, 8),
+        };
+        
+        var reservationResult = showTime.ReserveSeats(seats, DateTime.Now);
+
+        reservationResult.IsFailure.Should().BeTrue();
+    }
+    
+    [Fact]
     public void Check_If_Reservation_Contains_Only_Contiguous_Seats()
     {
         var movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
@@ -16,11 +36,11 @@ public class ReservationSeatsTests
         var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 01), auditorium);
 
-        var seats = new List<Seat>()
+        var seats = new List<Position>()
         {
-            Seat.Create(Position.Create(4, 5), null),
-            Seat.Create(Position.Create(4, 8), null),
-            Seat.Create(Position.Create(5, 5), null)
+            Position.Create(4, 5),
+            Position.Create(4, 8),
+            Position.Create(5, 5),
         };
 
         var reservationResult = showTime.ReserveSeats(seats, DateTime.Now);
@@ -47,18 +67,18 @@ public class ReservationSeatsTests
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
 
-        var seats = new List<Seat>()
+        var seats = new List<Position>()
         {
-            Seat.Create(Position.Create(4, 5), null),
-            Seat.Create(Position.Create(4, 6), null),
+            Position.Create(4, 5),
+            Position.Create(4, 6),
         };
         
         var reservationResult = showTime.ReserveSeats(seats, fakeTimeProvider.GetUtcNow().DateTime);
         reservationResult.IsSuccess.Should().BeTrue();
         
-        var secondSeats = new List<Seat>()
+        var secondSeats = new List<Position>()
         {
-            Seat.Create(Position.Create(4, 5), null),
+            Position.Create(4, 5)
         };
         
         var reservationResultOneMoreTime = showTime.ReserveSeats(secondSeats, fakeTimeProvider.GetUtcNow().DateTime);
@@ -85,10 +105,10 @@ public class ReservationSeatsTests
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         
-        var seats = new List<Seat>()
+        var seats = new List<Position>()
         {
-            Seat.Create(Position.Create(4, 5), null),
-            Seat.Create(Position.Create(4, 6), null),
+            Position.Create(4, 5),
+            Position.Create(4, 6),
         };
         
         var reservationResult = showTime.ReserveSeats(seats, fakeTimeProvider.GetUtcNow().DateTime);
@@ -123,10 +143,10 @@ public class ReservationSeatsTests
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         
-        var seats = new List<Seat>()
+        var seats = new List<Position>()
         {
-            Seat.Create(Position.Create(4, 5), null),
-            Seat.Create(Position.Create(4, 6), null),
+            Position.Create(4, 5),
+            Position.Create(4, 6),
         };
         
         var reservationResult = showTime.ReserveSeats(seats, fakeTimeProvider.GetUtcNow().DateTime);
@@ -139,6 +159,6 @@ public class ReservationSeatsTests
         buyingSeatsResult.IsSuccess.Should().BeTrue();
         buyingSeatsResult.Value.Showtime.Should().BeEquivalentTo(showTime);
         buyingSeatsResult.Value.CreatedTime.Should().Be(buyingTime);
-        buyingSeatsResult.Value.Seats.Should().BeEquivalentTo(seats);
+        buyingSeatsResult.Value.Seats.Should().BeEquivalentTo([auditorium[4,5],auditorium[4,6]]);
     }
 }

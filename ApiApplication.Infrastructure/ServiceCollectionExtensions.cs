@@ -4,7 +4,7 @@ using ApiApplication.Infrastructure.Repositories;
 using ApiApplication.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ApiApplication.Database;
+namespace ApiApplication.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
         serviceCollection.AddTransient<IShowtimeService, ShowtimeService>();
         serviceCollection.AddTransient<IMovieService, MovieService>();
+        serviceCollection.AddTransient<IAuditoriumService, AuditoriumService>();
         
         return serviceCollection;
     }

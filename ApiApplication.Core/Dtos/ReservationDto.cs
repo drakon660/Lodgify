@@ -10,3 +10,11 @@ public record ReservationDto
 
     public IEnumerable<SeatDto> Seats { get; init; }
 }
+
+public record CreateReservationDto
+{
+    public int ShowTimeId { get; init; }
+    public IEnumerable<SeatDto> Seats { get; init; }
+    
+    public DateTime SessionDate { get; init; }
+}

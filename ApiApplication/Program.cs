@@ -1,5 +1,5 @@
+using ApiApplication;
 using ApiApplication.Core;
-using ApiApplication.Database;
 using ApiApplication.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -31,5 +31,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+SampleData.Initialize(app);
 
 app.Run();

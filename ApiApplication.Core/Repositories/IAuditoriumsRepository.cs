@@ -4,7 +4,7 @@ namespace ApiApplication.Core.Repositories
 {
     public interface IAuditoriumsRepository
     {
-        Task<Auditorium> GetAsync(int auditoriumId, CancellationToken cancel);
+        Task<IEnumerable<Auditorium>> GetAll(CancellationToken cancellationToken);
         Task<Auditorium> GetById(int auditoriumId, CancellationToken cancellationToken);
     }
 }

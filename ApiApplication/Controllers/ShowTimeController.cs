@@ -24,10 +24,17 @@ public class ShowTimeController : ControllerBase
         return await _showtimeService.GetAllAsync(cancellationToken);
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> Create(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
+    [HttpPost("create-showtime")]
+    public async Task<IActionResult> CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
     {
-        await _showtimeService.Create(createShowtimeDto, cancellationToken);
+        await _showtimeService.CreateShowtime(createShowtimeDto, cancellationToken);
         return Ok();
     }
+
+    // [HttpPost("book-showtime")]
+    // public async Task<IActionResult> CreateReservation(CreateBookingDto bookingDto)
+    // {
+    //     await _showtimeService.BookShowtime(bookingDto);
+    //     return Ok();
+    // }
 }
