@@ -12,8 +12,9 @@
             
         }
 
-        private Auditorium(IEnumerable<Seat> seats)
+        private Auditorium(string name, IEnumerable<Seat> seats)
         {
+            Name = name;
             foreach (var seat in seats)
             {
                 seat.SetAuditorium(this);
@@ -22,6 +23,6 @@
             Seats = seats;
         }
         
-        public static Auditorium Create(IEnumerable<Seat> seats) => new(seats);
+        public static Auditorium Create(string name, IEnumerable<Seat> seats) => new(name, seats);
     }
 }

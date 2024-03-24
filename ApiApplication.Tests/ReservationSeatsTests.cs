@@ -13,7 +13,7 @@ public class ReservationSeatsTests
     {
         var movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
             new DateTime(1995, 06, 06));
-        var auditorium = Auditorium.Create(Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 01), auditorium);
 
         var seats = new List<Seat>()
@@ -43,7 +43,7 @@ public class ReservationSeatsTests
         var movie = Movie.Create("Road House", "tt0098206", "Patrick Swayze, Kelly Lynch, Sam Elliott",
             new DateTime(1989, 01, 01));
         
-        var auditorium = Auditorium.Create(Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
 
@@ -81,7 +81,7 @@ public class ReservationSeatsTests
         var movie = Movie.Create("Road House", "tt0098206", "Patrick Swayze, Kelly Lynch, Sam Elliott",
             new DateTime(1989, 01, 01));
         
-        var auditorium = Auditorium.Create(Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         
@@ -119,7 +119,7 @@ public class ReservationSeatsTests
         var movie = Movie.Create("Road House", "tt0098206", "Patrick Swayze, Kelly Lynch, Sam Elliott",
             new DateTime(1989, 01, 01));
         
-        var auditorium = Auditorium.Create(Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         

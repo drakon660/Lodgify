@@ -17,7 +17,12 @@ namespace ApiApplication.Core.Entities
         
         private List<Ticket> _tickets = new ();
         
-        private IReadOnlyList<Ticket> Tickets => _tickets.ToList();
+        public IReadOnlyList<Ticket> Tickets => _tickets.ToList();
+
+        protected Showtime()
+        {
+            
+        }
 
         private Showtime(Movie movie, DateTime sessionDate, Auditorium auditorium)
         {

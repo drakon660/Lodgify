@@ -1,30 +1,35 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using ApiApplication.Core;
+using ApiApplication.Database;
+using ApiApplication.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ApiApplication
-{
-    public class Program
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(Marker));
+builder.Services.AddDbContext<CinemaContext>(options =>
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        options.UseInMemoryDatabase("CinemaDb")
+            .EnableSensitiveDataLogging()
+            .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+    });
+builder.Services.AddCinema();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureLogging(options =>
-                    {
-                        options.AddConsole();
-                    });
-                    webBuilder.UseStartup<Startup>();                    
-                });
-           }
+var app = builder.Build();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();

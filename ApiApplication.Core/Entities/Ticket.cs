@@ -13,6 +13,11 @@ namespace ApiApplication.Core.Entities
         public bool Paid { get; set; }
         public Showtime Showtime { get; protected set; }
 
+        protected Ticket()
+        {
+            
+        }
+        
         private Ticket(Showtime showtime, IReadOnlyList<Seat> seats, DateTime createdTime)
         {
             Showtime = showtime;

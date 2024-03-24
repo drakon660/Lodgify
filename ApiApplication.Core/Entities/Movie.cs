@@ -8,6 +8,11 @@
         public string Stars { get; protected set; }
         public DateTime ReleaseDate { get; protected set; }
         public List<Showtime> Showtimes { get; set; }
+
+        protected Movie()
+        {
+            
+        }
         
         private Movie(string title, string imdbId, string stars, DateTime releaseDate)
         {

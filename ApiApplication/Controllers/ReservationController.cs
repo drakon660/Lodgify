@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiApplication.Controllers;
 
-[ApiController]
-[Route("reservations")]
-public class ReservationController : ControllerBase
-{
-    public ReservationController(IRes)
-    {
-        
-    }
-    public Task<ReservationDto> Create()
-    {
-        
-    } 
-}
+// [ApiController]
+// [Route("reservations")]
+// public class ReservationController : ControllerBase
+// {
+//     public ReservationController(IRes)
+//     {
+//         
+//     }
+//     public Task<ReservationDto> Create()
+//     {
+//         
+//     } 
+// }

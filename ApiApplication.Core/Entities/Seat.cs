@@ -4,10 +4,16 @@ namespace ApiApplication.Core.Entities
 {
     public class Seat
     {
-        public Position Position { get; set; }
-        public int AuditoriumId { get; set; }
-        public Auditorium Auditorium { get; set; }
+        public Guid Id { get; protected set; }
+        public Position Position { get; protected set; }
+        public int AuditoriumId { get; protected set; }
+        public Auditorium Auditorium { get; protected set; }
 
+        protected Seat()
+        {
+            
+        }
+        
         private Seat(Position position, Auditorium auditorium)
         {
             Position = position;
@@ -21,41 +27,5 @@ namespace ApiApplication.Core.Entities
         
         public static Seat Create(Position position, Auditorium auditorium) => new(position, auditorium);
         
-        public ReservationTimeWindow ReservationTimeWindow { get; protected set; }
-
-        public bool ReserveSeat(DateTime reservationDate, int movieLengthInMinute)
-        {
-            if (WithinReservationWindow(reservationDate))
-            {
-                ReservationTimeWindow =
-                    new ReservationTimeWindow(reservationDate, reservationDate.AddMinutes(movieLengthInMinute));
-            }
-
-            return false;
-        }
-
-        private bool WithinReservationWindow(DateTime currentTime)
-        {
-            if (ReservationTimeWindow != null)
-            {
-                return ReservationTimeWindow.StartTime <= currentTime && currentTime <= ReservationTimeWindow.EndTime;
-            }
-
-            return false;
-        }
-    }
-}
-
-
-
-public class ReservationTimeWindow
-{
-    public DateTime StartTime { get; protected set; }
-    public DateTime EndTime { get; protected set; }
-
-    public ReservationTimeWindow(DateTime startTime, DateTime endTime)
-    {
-        StartTime = startTime;
-        EndTime = endTime;
     }
 }

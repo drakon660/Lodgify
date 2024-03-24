@@ -11,7 +11,7 @@ public interface IReservationService
     Task<Reservation> Create();
 
 
-    // public async Task<ReservationDto> CreateReservation(string movieTitle, IEnumerable<SeatDto> seatsToReserve, DateTime reservationDate, CancellationToken token)
+    // public async Task<ReservationDto> CreateReservation(string movieTitle, IEnumerable<SeatDto> seatsToReserve, DateTime reservationDate, CancellationToken cancellationToken)
     // {
     //     var showtime = await _showtimesRepository.GetByMovieTitleAsync(movieTitle);
     //

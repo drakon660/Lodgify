@@ -8,9 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,11 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Entities\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ApiApplication.Core\ApiApplication.Core.csproj" />
+    <ProjectReference Include="..\ApiApplication.Infrastructure\ApiApplication.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
