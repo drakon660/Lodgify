@@ -1,5 +1,6 @@
 ﻿using ApiApplication.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ApiApplication.Infrastructure
 {
@@ -14,6 +15,7 @@ namespace ApiApplication.Infrastructure
         public DbSet<Showtime> Showtimes { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +24,7 @@ namespace ApiApplication.Infrastructure
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
                 build.HasMany(x => x.Seats).WithOne(x=>x.Auditorium).Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
-                //build.HasMany(entry => entry.Showtimes).WithOne().HasForeignKey(entity => entity.AuditoriumId);
+                build.HasMany(entry => entry.Showtimes).WithOne(x=>x.Auditorium).Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
             });
 
             modelBuilder.Entity<Seat>(build =>
@@ -30,7 +32,7 @@ namespace ApiApplication.Infrastructure
                 build.HasKey(x => x.Id);
                 build.Property(x => x.Id).ValueGeneratedOnAdd();
                 build.HasOne(entry => entry.Auditorium).WithMany(entry => entry.Seats);
-                build.ComplexProperty(x => x.Position).IsRequired();
+                build.OwnsOne(x => x.Position);
             });
             
             modelBuilder.Entity<Showtime>(build =>
@@ -52,6 +54,15 @@ namespace ApiApplication.Infrastructure
             {
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
+                build.HasOne(entry => entry.Showtime);
+            });
+
+            modelBuilder.Entity<Reservation>(build =>
+            {
+                build.HasKey(entry => entry.Id);
+                build.Property(entry => entry.Id).ValueGeneratedOnAdd();
+                build.HasMany(entry => entry.Seats);
+                build.HasOne(entry => entry.Showtime).WithMany(x=>x.Reservations);
             });
         }
     }

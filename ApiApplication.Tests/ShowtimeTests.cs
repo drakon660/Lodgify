@@ -27,7 +27,8 @@ public class ShowtimeTests
     [Fact]
     public void Check_If_Multiple_Showtimes_Cannot_be_set_in_same_auditorium_with_time_collision()
     {
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(15, 7));
         
         Movie movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
             new DateTime(1995, 06, 06),96);

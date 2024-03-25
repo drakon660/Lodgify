@@ -6,4 +6,6 @@ public record ShowtimeDto
     public string AuditoriumName { get; init; }
     
     public DateTime SessionDate { get; init; }
+    
+    public IEnumerable<SeatDto> FreeSeats { get; init; }
 }

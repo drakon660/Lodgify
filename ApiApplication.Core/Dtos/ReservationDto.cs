@@ -9,6 +9,10 @@ public record ReservationDto
     public string AuditoriumName { get; init; }
 
     public IEnumerable<SeatDto> Seats { get; init; }
+    
+    public bool IsExpired { get; init; }
+    
+    public bool IsConfirmed { get; init; }
 }
 
 public record CreateReservationDto

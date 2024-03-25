@@ -30,7 +30,7 @@ namespace ApiApplication.Core.Entities
             if (reservation.IsExpired(currentDate))
                 return Result.Failure<Ticket>("Reservation expired");
 
-            if(reservation.Confirmed)
+            if(reservation.IsConfirmed)
                 return Result.Failure<Ticket>("Ticket sold for that reservation");
             
             reservation.SetConfirmed();
@@ -41,10 +41,10 @@ namespace ApiApplication.Core.Entities
         public (bool Contains, IEnumerable<Seat> CommonSeats) ContainsSeats(IEnumerable<Seat> seats)
         {
             var commonSeats = Seats.Join(seats,x=>x.Position, y=>y.Position, (seat, _) => seat).ToList();
-
+        
             if (commonSeats.Count > 0)
                 return (true, commonSeats);
-
+        
             return (false, Enumerable.Empty<Seat>());
         }
     }

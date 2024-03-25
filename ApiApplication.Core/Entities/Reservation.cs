@@ -9,8 +9,7 @@ public class Reservation
     public Showtime Showtime { get; protected set; }
     public bool IsExpired(DateTime currentDate) => CreatedAtUtc.AddMinutes(10) < currentDate;
     public IReadOnlyList<Seat> Seats => _seats.ToList();
-    
-    public bool Confirmed { get; protected set; }
+    public bool IsConfirmed { get; protected set; }
 
     private List<Seat> _seats = new ();
 
@@ -22,13 +21,19 @@ public class Reservation
     private Reservation(Showtime showtime, ICollection<Seat> seatsToReserve, DateTime createdAtUtc)
     {
         Showtime = showtime;
+
+        foreach (var seat in seatsToReserve)
+        {
+            seat.SetAuditorium(showtime.Auditorium);
+        }
+        
         _seats.AddRange(seatsToReserve);
         CreatedAtUtc = createdAtUtc;
     }
 
     public void SetConfirmed()
     {
-        Confirmed = true;
+        IsConfirmed = true;
     }
     
     public static Result<Reservation> Create(Showtime showtime, ICollection<Seat> seatsToReserve, DateTime createdAtUtc)
@@ -49,8 +54,8 @@ public class Reservation
         var sortedSeats = seats.OrderBy(x=>x.Position.RowNumber).ThenBy(x=>x.Position.SeatNumber);
         
         var expectedSeat = seats.First().Position.SeatNumber;
-        var currentRow =seats.First().Position.RowNumber;
-
+        var currentRow = seats.First().Position.RowNumber;
+    
         foreach (var seat in sortedSeats)
         {
             if (seat.Position.RowNumber != currentRow || seat.Position.SeatNumber != expectedSeat)

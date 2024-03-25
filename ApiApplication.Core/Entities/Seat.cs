@@ -13,6 +13,11 @@ namespace ApiApplication.Core.Entities
         {
             
         }
+
+        public void SetAuditorium(Auditorium auditorium)
+        {
+            Auditorium = auditorium;
+        }
         
         private Seat(Position position)
         {
@@ -20,6 +25,5 @@ namespace ApiApplication.Core.Entities
         }
         
         public static Seat Create(Position position) => new(position);
-        
     }
 }

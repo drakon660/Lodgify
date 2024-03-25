@@ -26,12 +26,19 @@ public class ShowtimeRepository : IShowtimeRepository
 
     public async Task<Showtime> GetById(int id, CancellationToken cancellationToken)
     {
-        return await _context.Showtimes.Include(x => x.Auditorium).FirstOrDefaultAsync(cancellationToken);
+        return await _context.Showtimes.Include(x => x.Auditorium)
+            .ThenInclude(x => x.Seats)
+            .Include(x=>x.Movie)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<Showtime>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _context.Showtimes.Include(x=>x.Auditorium)
-            .Include(x=>x.Movie).ToListAsync(cancellationToken);
+        return await _context.Showtimes.Include(x => x.Auditorium)
+            .ThenInclude(x=>x.Seats)
+            .Include(x=>x.Reservations)
+            .ThenInclude(x=>x.Seats).Include(x=>x.Tickets)
+            .ThenInclude(x=>x.Seats)
+            .Include(x => x.Movie).ToListAsync(cancellationToken);
     }
 }

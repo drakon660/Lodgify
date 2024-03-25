@@ -13,7 +13,8 @@ public class ReservationSeatsTests
     {
         Movie movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
             new DateTime(1995, 06, 06),96);
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(15, 7));
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 01), auditorium);
 
         var seats = new List<Position>()
@@ -33,7 +34,8 @@ public class ReservationSeatsTests
     {
         Movie movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
             new DateTime(1995, 06, 06),96);
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(15, 7));
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 01), auditorium);
 
         var seats = new List<Position>()
@@ -63,7 +65,8 @@ public class ReservationSeatsTests
         Movie movie = Movie.Create("Johny Mnemonic", "tt0113481", "Keanu Reeves, Dolph Lundgren, Dina Meyer",
             new DateTime(1995, 06, 06),96);
         
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(15, 7));
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
 
@@ -101,7 +104,8 @@ public class ReservationSeatsTests
         var movie = Movie.Create("Road House", "tt0098206", "Patrick Swayze, Kelly Lynch, Sam Elliott",
             new DateTime(1989, 01, 01),114);
         
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(15, 7));
         
         var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         
@@ -139,26 +143,37 @@ public class ReservationSeatsTests
         var movie = Movie.Create("Road House", "tt0098206", "Patrick Swayze, Kelly Lynch, Sam Elliott",
             new DateTime(1989, 01, 01),114);
         
-        var auditorium = Auditorium.Create("Barcelona",Utils.Generate(15, 7));
-        
-        var showTime = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
+        var auditorium = Auditorium.Create("Barcelona");
+        auditorium.SetSeats(Utils.Generate(4, 6));
+        var showTimResult = Showtime.Create(movie, new DateTime(2020, 01, 03), auditorium);
         
         var seats = new List<Position>()
         {
             Position.Create(4, 5),
             Position.Create(4, 6),
         };
+
+        var showTime = showTimResult.Value;
         
-        var reservationResult = showTime.Value.ReserveSeats(seats, fakeTimeProvider.GetUtcNow().DateTime);
+        var reservationResult = showTime.ReserveSeats(seats, fakeTimeProvider.GetUtcNow().DateTime);
         reservationResult.IsSuccess.Should().BeTrue();
+        reservationResult.Value.Showtime.Auditorium.Name.Should().Be("Barcelona");
 
         var buyingTime = fakeTimeProvider.GetUtcNow().DateTime;
         
-        var buyingSeatsResult = showTime.Value.BuySeats(reservationResult.Value, buyingTime);
+        var buyingSeatsResult = showTime.BuySeats(reservationResult.Value, buyingTime);
 
+        var freeSeats = showTime.FreeSeats();
+
+        //TODO tests this
+        IEnumerable<Seat> seatsl = [auditorium[4, 5], auditorium[4, 6]];
+        var leftSeas = auditorium.Seats.ExceptBy(seats.Select(x => x), x => x.Position);
+        freeSeats.Should().BeEquivalentTo(leftSeas);
+        
         buyingSeatsResult.IsSuccess.Should().BeTrue();
         buyingSeatsResult.Value.Showtime.Should().BeEquivalentTo(showTime);
         buyingSeatsResult.Value.CreatedTime.Should().Be(buyingTime);
         buyingSeatsResult.Value.Seats.Should().BeEquivalentTo([auditorium[4,5],auditorium[4,6]]);
+        buyingSeatsResult.Value.Showtime.Auditorium.Name.Should().Be("Barcelona");
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using ApiApplication.Core.Entities;
+﻿using ApiApplication.Core.Entities;
 using ApiApplication.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,15 +12,17 @@ public class AuditoriumsRepository : IAuditoriumsRepository
     {
         _context = context;
     }
-    
+
 
     public async Task<IEnumerable<Auditorium>> GetAll(CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums.Include(x=>x.Seats).ToListAsync(cancellationToken);
+        return await _context.Auditoriums.Include(x => x.Seats)
+            .Include(x => x.Showtimes).ToListAsync(cancellationToken);
     }
 
-    public async Task<Auditorium> GetById(int auditoriumId, CancellationToken cancellationToken)
+    public async Task<Auditorium> GetById(int id, CancellationToken cancellationToken)
     {
-        return await _context.Auditoriums.FindAsync(auditoriumId, cancellationToken);
+        return await _context.Auditoriums.Include(x => x.Seats).Include(x => x.Showtimes)
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 }

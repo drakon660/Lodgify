@@ -12,6 +12,7 @@ namespace ApiApplication.Core.Entities
         
         private readonly List<Seat> _seats = new();
         public virtual IReadOnlyList<Seat> Seats => _seats.ToList(); 
+        
 
         protected Auditorium()
         {
@@ -25,18 +26,23 @@ namespace ApiApplication.Core.Entities
 
         public void SetSeats(IEnumerable<Seat> seats)
         {
+            foreach (var seat in seats)
+            {
+                seat.SetAuditorium(this);
+            }
+            
             _seats.AddRange(seats); 
         }
 
         public (bool AllSeatsFound, ICollection<Seat> Seats) HasSeatsOn(ICollection<Position> positions)
         {
-            var existingSeats = Seats.Where(x => positions.Contains(x.Position)).ToList();
-
+            var existingSeats = _seats.Where(x => positions.Contains(x.Position)).ToList();
+        
             if (positions.Count == existingSeats.Count)
             {
                 return (true, existingSeats);
             }
-
+        
             return (false, null);
         }
         
@@ -61,7 +67,7 @@ namespace ApiApplication.Core.Entities
         {
             get
             {
-                return Seats.FirstOrDefault(seat => seat.Position.RowNumber == rowNumber && seat.Position.SeatNumber == seatNumber);
+                return _seats.FirstOrDefault(seat => seat.Position.RowNumber == rowNumber && seat.Position.SeatNumber == seatNumber);
             }
         }
     }

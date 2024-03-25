@@ -13,6 +13,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<IShowtimeRepository, ShowtimeRepository>();
         serviceCollection.AddTransient<IMovieRepository, MovieRepository>();
         serviceCollection.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
+        serviceCollection.AddTransient<IReservationRepository, ReservationRepository>();
+        serviceCollection.AddTransient<ITicketRepository, TicketRepository>();
+        
         serviceCollection.AddTransient<IShowtimeService, ShowtimeService>();
         serviceCollection.AddTransient<IMovieService, MovieService>();
         serviceCollection.AddTransient<IAuditoriumService, AuditoriumService>();
