@@ -1,5 +1,6 @@
-﻿using ApiApplication.Core.ValueObjects;
-using CSharpFunctionalExtensions;
+﻿using System.Xml.XPath;
+using ApiApplication.Core.ValueObjects;
+using Ardalis.Result;
 
 namespace ApiApplication.Core.Entities
 {
@@ -52,7 +53,7 @@ namespace ApiApplication.Core.Entities
                 return new Showtime(movie, sessionDate, auditorium);    
             }
 
-            return Result.Failure<Showtime>("showtime is overlapping");
+            return Result.Invalid(new ValidationError("showtime is overlapping"));
         }
         
         public Result<Reservation> ReserveSeats(ICollection<Position> positionsToSeat, DateTime reservationDate)
@@ -60,7 +61,7 @@ namespace ApiApplication.Core.Entities
             var seatsResults = Auditorium.HasSeatsOn(positionsToSeat);
         
             if (!seatsResults.AllSeatsFound)
-                return Result.Failure<Reservation>("seats outside Auditorium");
+                return Result.Invalid(new ValidationError("seats outside auditorium"));
         
             var tickets = _tickets.Where(x =>
             {
@@ -70,20 +71,20 @@ namespace ApiApplication.Core.Entities
         
             if (tickets.Any())
             {
-                return Result.Failure<Reservation>("seat sold");
+                return Result.Invalid(new ValidationError("seat sold"));
             }
             
             var reservations = _reservations.Where(x => x.ContainsSeatsNumbers(seatsResults.Seats).Any());
             
             if(reservations.Any())
-                return Result.Failure<Reservation>("seat already reserved");
+                return Result.Invalid(new ValidationError($"seat {string.Join(' ', reservations.First().Seats.Select(x=>x.Position))} already reserved"));
             
             var reservationResult = Reservation.Create(this, seatsResults.Seats, reservationDate);
         
             if(reservationResult.IsSuccess)
                 _reservations.Add(reservationResult.Value);
            
-            return reservationResult;
+            return  reservationResult;
         }
 
 

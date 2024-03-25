@@ -1,9 +1,9 @@
 ﻿using ApiApplication.Core.Dtos;
+using Ardalis.Result;
 
 namespace ApiApplication.Core.Services;
 
 public interface IMovieService
 {
-    public Task<IEnumerable<MovieDto>> GetAll(CancellationToken cancellationToken);
-    public Task<MovieDto> GetMovieByTitle(string title, CancellationToken cancellationToken);
+    Task<Result<IEnumerable<MovieDto>>> GetAll(CancellationToken cancellationToken);
 }

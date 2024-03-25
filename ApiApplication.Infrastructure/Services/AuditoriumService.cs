@@ -1,6 +1,7 @@
 ﻿using ApiApplication.Core.Dtos;
 using ApiApplication.Core.Repositories;
 using ApiApplication.Core.Services;
+using Ardalis.Result;
 using AutoMapper;
 
 namespace ApiApplication.Infrastructure.Services;
@@ -15,9 +16,13 @@ public class AuditoriumService : IAuditoriumService
         _mapper = mapper;
         _auditoriumsRepository = auditoriumsRepository;
     }
-    public async Task<IEnumerable<AuditoriumDto>> GetAll(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<AuditoriumDto>>> GetAll(CancellationToken cancellationToken)
     {
         var auditoriums = await _auditoriumsRepository.GetAll(cancellationToken);
-        return _mapper.Map<IEnumerable<AuditoriumDto>>(auditoriums);
+
+        if (!auditoriums.Any())
+            return Result.NotFound();
+
+        return Result.Success(_mapper.Map<IEnumerable<AuditoriumDto>>(auditoriums));
     }
 }

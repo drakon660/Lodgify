@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using CSharpFunctionalExtensions;
+﻿using Ardalis.Result;
 
 namespace ApiApplication.Core.Entities
 {
@@ -28,10 +27,10 @@ namespace ApiApplication.Core.Entities
         public static Result<Ticket> Create(Reservation reservation, DateTime currentDate)
         {
             if (reservation.IsExpired(currentDate))
-                return Result.Failure<Ticket>("Reservation expired");
+                return Result.Invalid(new ValidationError("reservation expired"));
 
             if(reservation.IsConfirmed)
-                return Result.Failure<Ticket>("Ticket sold for that reservation");
+                return Result.Invalid(new ValidationError("Ticket sold for that reservation"));
             
             reservation.SetConfirmed();
             

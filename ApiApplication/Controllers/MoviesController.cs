@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ApiApplication.Core.Dtos;
 using ApiApplication.Core.Services;
+using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiApplication.Controllers;
@@ -19,14 +21,9 @@ public class MoviesController : ControllerBase
     }
     
     [HttpGet("")]
-    public async Task<IEnumerable<MovieDto>> GetMovies(CancellationToken cancellationToken)
+    [TranslateResultToActionResult]
+    public async Task<Result<IEnumerable<MovieDto>>> GetMovies(CancellationToken cancellationToken)
     {
         return await _movieService.GetAll(cancellationToken);
-    }
-
-    [HttpGet("{title}")]
-    public async Task<MovieDto> GetMovie(string tile, CancellationToken cancellationToken)
-    {
-        return await _movieService.GetMovieByTitle(tile,cancellationToken);
     }
 }

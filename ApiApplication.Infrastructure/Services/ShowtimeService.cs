@@ -3,8 +3,9 @@ using ApiApplication.Core.Entities;
 using ApiApplication.Core.Repositories;
 using ApiApplication.Core.Services;
 using ApiApplication.Core.ValueObjects;
+using Ardalis.Result;
 using AutoMapper;
-using CSharpFunctionalExtensions;
+//using CSharpFunctionalExtensions;
 
 namespace ApiApplication.Infrastructure.Services;
 
@@ -31,21 +32,28 @@ public class ShowtimeService : IShowtimeService
         _ticketRepository = ticketRepository;
     }
 
-    public async Task<IEnumerable<ShowtimeDto>> GetAll(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<ShowtimeDto>>> GetAllShowtimes(CancellationToken cancellationToken)
     {
         var showtimes = await _showtimeRepository.GetAllAsync(cancellationToken);
 
-        return _mapper.Map<IEnumerable<Showtime>, IEnumerable<ShowtimeDto>>(showtimes);
+        if (!showtimes.Any())
+            return Result.NotFound();
+
+        return Result.Success(_mapper.Map<IEnumerable<ShowtimeDto>>(showtimes));
     }
 
-    public async Task<IEnumerable<ReservationDto>> GetAllReservations(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<ReservationDto>>> GetAllReservations(CancellationToken cancellationToken)
     {
         var reservations = await _reservationRepository.GetByAll(cancellationToken);
-        return _mapper.Map<IEnumerable<ReservationDto>>(reservations);
+
+        if (!reservations.Any())
+            return Result.NotFound();
+
+        return Result.Success(_mapper.Map<IEnumerable<ReservationDto>>(reservations));
     }
 
 
-    public async Task<Result<ShowtimeDto>> CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
+    public async Task<Result<CreatedShowtimeDto>> CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
     {
         var movie = await _movieRepository.GetById(createShowtimeDto.MovieId, cancellationToken);
         var auditorium = await _auditoriumsRepository.GetById(createShowtimeDto.AuditoriumId, cancellationToken);
@@ -55,21 +63,20 @@ public class ShowtimeService : IShowtimeService
         if (showtimeResult.IsSuccess)
         {
             await _showtimeRepository.CreateShowtime(showtimeResult.Value, cancellationToken);
-            return _mapper.Map<ShowtimeDto>(showtimeResult.Value);
+            return _mapper.Map<CreatedShowtimeDto>(showtimeResult.Value);
         }
 
-        return Result.Failure<ShowtimeDto>(showtimeResult.Error);
+        return Result.Invalid(showtimeResult.ValidationErrors.ToList());
     }
 
-    public async Task<ReservationDto> ReserveShowtime(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> ReserveShowtime(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
     {
         var showTime = await _showtimeRepository.GetById(createReservationDto.ShowTimeId, cancellationToken);
         
         var seatsPositions = createReservationDto.Seats.Select(x => Position.Create(x.RowNumber, x.SeatNumber)).ToList();
         
         var reservationResult =
-            showTime.ReserveSeats(seatsPositions,
-                createReservationDto.SessionDate);
+            showTime.ReserveSeats(seatsPositions, DateTime.UtcNow);
         
         if (reservationResult.IsSuccess)
         {
@@ -77,17 +84,20 @@ public class ShowtimeService : IShowtimeService
             return _mapper.Map<ReservationDto>(reservationResult.Value);
         }
         
-        return null;
+        return Result.Invalid(reservationResult.ValidationErrors.ToList());
     }
 
-    public async Task<IEnumerable<TicketDto>> GetAllTickets(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TicketDto>>> GetAllTickets(CancellationToken cancellationToken)
     {
         var tickets = await _ticketRepository.GetAll(cancellationToken);
 
-        return _mapper.Map<IEnumerable<TicketDto>>(tickets);
+        if (!tickets.Any())
+            return Result.NotFound();
+        
+        return Result.Success(_mapper.Map<IEnumerable<TicketDto>>(tickets));
     }
 
-    public async Task<TicketDto> ConfirmReservation(Guid reservationId, CancellationToken cancellationToken)
+    public async Task<Result<TicketDto>> ConfirmReservation(Guid reservationId, CancellationToken cancellationToken)
     {
         var reservation = await _reservationRepository.GetById(reservationId, cancellationToken);
 
@@ -98,6 +108,6 @@ public class ShowtimeService : IShowtimeService
             return _mapper.Map<TicketDto>(ticketResult.Value);
         }
 
-        return null;
+        return Result.Invalid(ticketResult.ValidationErrors.ToList());
     }
 }

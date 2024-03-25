@@ -28,4 +28,12 @@ public class Position : ValueObject<Position>
     {
         return HashCode.Combine(RowNumber, SeatNumber);
     }
+
+    public static implicit operator string(Position position)
+    {
+        return $"row: {position.RowNumber}, seat:{position.SeatNumber}";
+    }
+
+    public override string ToString() => $"[row:{RowNumber}, seat:{SeatNumber}]";
+    
 }

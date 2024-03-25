@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ApiApplication.Core.Dtos;
 using ApiApplication.Core.Services;
+using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiApplication.Controllers;
@@ -19,7 +21,8 @@ public class AuditoriumController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<AuditoriumDto>> GetAll(CancellationToken cancellationToken)
+    [TranslateResultToActionResult]
+    public async Task<Result<IEnumerable<AuditoriumDto>>> GetAll(CancellationToken cancellationToken)
     {
         return await _auditoriumService.GetAll(cancellationToken);
     }

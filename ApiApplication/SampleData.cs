@@ -8,7 +8,6 @@ using ApiApplication.Core.Entities;
 using ApiApplication.Core.ValueObjects;
 using ApiApplication.Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ApiApplication;
@@ -23,7 +22,7 @@ public class SampleData
 
         Auditorium auditorium = Auditorium.Create("Einstein");
         
-        auditorium.SetSeats(Utils.Generate(3,4));
+        auditorium.SetSeats(Utils.Generate(2,3));
         
         Auditorium auditorium2 = Auditorium.Create("Viper");
         
@@ -50,7 +49,7 @@ public class SampleData
         context.Movies.AddRange(movie, movie2, movie3);
         context.Showtimes.Add(showtime.Value);
         context.Reservations.Add(reservation.Value);
-        context.Tickets.Add(ticket.Value);
+        //context.Tickets.Add(ticket.Value);
         
         context.SaveChanges();
     }

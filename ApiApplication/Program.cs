@@ -1,6 +1,10 @@
+using System.Linq;
+using System.Net;
 using ApiApplication;
 using ApiApplication.Core;
 using ApiApplication.Infrastructure;
+using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -9,6 +13,15 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+builder.Services.AddControllers(mvcOptions => mvcOptions
+    .AddResultConvention(resultStatusMap => resultStatusMap
+        .AddDefaultMap()
+            .For(ResultStatus.Ok, HttpStatusCode.OK, resultStatusOptions => resultStatusOptions
+            .For("POST", HttpStatusCode.Created))
+            .For(ResultStatus.Error, HttpStatusCode.InternalServerError)
+            .For(ResultStatus.Invalid, HttpStatusCode.BadRequest, resultStatusOptions => resultStatusOptions
+            .With((_, result) => string.Join("\r\n", result.ValidationErrors.Select(x=>x.ErrorMessage))))
+    ));
 builder.Services.AddAutoMapper(typeof(Marker));
 builder.Services.AddDbContext<CinemaContext>(options =>
     {

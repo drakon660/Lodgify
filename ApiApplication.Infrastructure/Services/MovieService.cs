@@ -1,6 +1,7 @@
 ﻿using ApiApplication.Core.Dtos;
 using ApiApplication.Core.Repositories;
 using ApiApplication.Core.Services;
+using Ardalis.Result;
 using AutoMapper;
 
 namespace ApiApplication.Infrastructure.Services;
@@ -15,15 +16,13 @@ public class MovieService : IMovieService
         _mapper = mapper;
         _movieRepository = movieRepository;
     }
-    public async Task<IEnumerable<MovieDto>> GetAll(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<MovieDto>>> GetAll(CancellationToken cancellationToken)
     {
         var movies =  await _movieRepository.GetAll(cancellationToken);
-        return _mapper.Map<IEnumerable<MovieDto>>(movies);
-    }
 
-    public async Task<MovieDto> GetMovieByTitle(string title, CancellationToken cancellationToken)
-    {
-        var movie =  await _movieRepository.GetByName(title,cancellationToken);
-        return _mapper.Map<MovieDto>(movie);
+        if (!movies.Any())
+            return Result.NotFound();
+
+        return Result.Success(_mapper.Map<IEnumerable<MovieDto>>(movies));
     }
 }

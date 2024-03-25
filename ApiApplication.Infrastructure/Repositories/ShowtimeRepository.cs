@@ -29,6 +29,8 @@ public class ShowtimeRepository : IShowtimeRepository
         return await _context.Showtimes.Include(x => x.Auditorium)
             .ThenInclude(x => x.Seats)
             .Include(x=>x.Movie)
+            .Include(x=>x.Reservations)
+            .ThenInclude(x=>x.Seats)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

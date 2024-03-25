@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿
+using Ardalis.Result;
 
 namespace ApiApplication.Core.Entities;
 
@@ -7,7 +8,7 @@ public class Reservation
     public Guid Id { get; protected set; }
     public DateTime CreatedAtUtc { get; protected set; }
     public Showtime Showtime { get; protected set; }
-    public bool IsExpired(DateTime currentDate) => CreatedAtUtc.AddMinutes(10) < currentDate;
+    public bool IsExpired(DateTime currentDate) => CreatedAtUtc.AddMinutes(1) < currentDate;
     public IReadOnlyList<Seat> Seats => _seats.ToList();
     public bool IsConfirmed { get; protected set; }
 
@@ -40,7 +41,7 @@ public class Reservation
     {
         if (!AreSeatsContiguous(seatsToReserve))
         {
-            return Result.Failure<Reservation>("Seats are not contiguous");
+            return Result.Invalid(new ValidationError("Seats are not contiguous"));
         }
         
         return new Reservation(showtime, seatsToReserve, createdAtUtc);
