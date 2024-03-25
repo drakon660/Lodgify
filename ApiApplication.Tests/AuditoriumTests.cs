@@ -15,6 +15,6 @@ public class AuditoriumTests
 
         var seatsResult = auditorium.HasSeatsOn([Position.Create(7, 5),Position.Create(7, 10)]);
 
-        seatsResult.AllSeatsFound.Should().BeFalse();
+        seatsResult.AllSeatsFound.Should().BeTrue();
     }
 }

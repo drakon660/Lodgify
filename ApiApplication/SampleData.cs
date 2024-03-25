@@ -49,7 +49,7 @@ public class SampleData
         context.Movies.AddRange(movie, movie2, movie3);
         context.Showtimes.Add(showtime.Value);
         context.Reservations.Add(reservation.Value);
-        //context.Tickets.Add(ticket.Value);
+        context.Tickets.Add(ticket.Value);
         
         context.SaveChanges();
     }

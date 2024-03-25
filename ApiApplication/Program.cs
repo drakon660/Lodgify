@@ -6,6 +6,7 @@ using ApiApplication.Infrastructure;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,12 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+// builder.Services.AddHttpLogging(o =>
+// {
+//     o.LoggingFields = HttpLoggingFields.Duration | HttpLoggingFields.RequestPath | HttpLoggingFields.RequestQuery;
+//     o.CombineLogs = true;
+// });
+
 builder.Services.AddControllers(mvcOptions => mvcOptions
     .AddResultConvention(resultStatusMap => resultStatusMap
         .AddDefaultMap()
@@ -40,6 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//app.UseHttpLogging();
+app.UseRequestLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -6,6 +6,7 @@ using ApiApplication.Core.Services;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace ApiApplication.Controllers;
 
