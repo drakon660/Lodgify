@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Result.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.62.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.3" />
@@ -19,13 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-    <Protobuf Include="movies.proto" GrpcServices="Client" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.61.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ApiApplication.Core\ApiApplication.Core.csproj" />
     <ProjectReference Include="..\ApiApplication.Infrastructure\ApiApplication.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="showtime.proto" />
+    <Protobuf Include="showtime.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

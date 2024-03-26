@@ -25,9 +25,11 @@ public class ReservationRepository : IReservationRepository
 
     public async Task<Reservation> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var reservation = await _cinemaContext.Showtimes
-            .Include(x=>x.Reservations)
-            .SelectMany(showtime => showtime.Reservations)
+        var reservation = await _cinemaContext.Reservations
+            .Include(x=>x.Seats)
+            .ThenInclude(x=>x.Auditorium)
+            .Include(x=>x.Showtime)
+            .ThenInclude(x=>x.Movie)
             .Where(reservation => reservation.Id == id)
             .SingleOrDefaultAsync(cancellationToken);
 

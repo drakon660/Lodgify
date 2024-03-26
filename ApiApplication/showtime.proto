@@ -1,0 +1,97 @@
+﻿syntax = "proto3";
+
+// Import google protobuf timestamp for DateTime conversion
+import "google/protobuf/timestamp.proto";
+package grpc;
+// Service definition
+service ShowtimeService {
+  rpc CreateShowtime(CreateShowtimeRequest) returns (CreatedShowtimeResponse);
+  rpc GetAll(GetAllRequest) returns (GetAllResponse);
+  rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
+  rpc ConfirmTicket(ConfirmTicketRequest) returns (ConfirmTicketResponse);
+}
+
+// Request message
+message CreateShowtimeRequest {
+  int32 movieId = 1;
+  int32 auditoriumId = 2;
+  google.protobuf.Timestamp sessionDate = 3;
+}
+
+// Response message
+message CreatedShowtimeResponse {
+  int32 showtimeId = 1;
+  string title = 2;
+  string auditoriumName = 3;
+  google.protobuf.Timestamp sessionDate = 4;
+  StatusDto status = 5;
+}
+
+message StatusDto {
+   int32 code = 1;
+   string message = 2; 
+}
+
+message GetAllRequest {}
+
+// Response message
+message GetAllResponse {
+  repeated ShowtimeDto showtimes = 1;
+  StatusDto status = 2;
+}
+
+// Showtime DTO message
+message ShowtimeDto {
+  int32 showtimeId = 1;
+  string title = 2;
+  string auditoriumName = 3;
+  google.protobuf.Timestamp sessionDate = 4;
+  repeated SeatDto freeSeats = 5;
+}
+
+// Seat DTO message
+message SeatDto {
+  uint32 rowNumber = 1;
+  uint32 seatNumber = 2;
+}
+
+// Request message for creating reservation
+message CreateReservationRequest {
+  int32 showTimeId = 1;
+  repeated SeatDto seats = 2;
+}
+
+// Response message for creating reservation
+message CreateReservationResponse {
+  ReservationDto reservation = 1;
+  StatusDto status = 2;
+}
+
+// Reservation DTO message
+message ReservationDto {
+  string reservationId = 1;
+  string movieTitle = 2;
+  string auditoriumName = 3;
+  repeated SeatDto seats = 4;
+  bool isExpired = 5;
+  bool isConfirmed = 6;
+}
+
+// Request message for confirming ticket
+message ConfirmTicketRequest {
+  string reservationId = 1;
+}
+
+// Response message for confirming ticket
+message ConfirmTicketResponse {
+  TicketDto ticket = 1;
+  StatusDto status = 2;
+}
+
+// Ticket DTO message
+message TicketDto {
+  string ticketId = 1;
+  string movieTitle = 2;
+  string auditoriumName = 3;
+  repeated SeatDto seats = 4;
+}

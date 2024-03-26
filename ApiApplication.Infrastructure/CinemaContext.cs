@@ -62,7 +62,8 @@ namespace ApiApplication.Infrastructure
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
                 build.HasMany(entry => entry.Seats);
-                build.HasOne(entry => entry.Showtime).WithMany(x=>x.Reservations);
+                build.HasOne(entry => entry.Showtime)
+                    .WithMany(x=>x.Reservations);
             });
         }
     }

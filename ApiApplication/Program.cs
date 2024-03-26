@@ -4,6 +4,7 @@ using System.Net;
 using ApiApplication;
 using ApiApplication.Core;
 using ApiApplication.Infrastructure;
+using ApiApplication.Services;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+builder.Services.AddGrpc();
 // builder.Services.AddHttpLogging(o =>
 // {
 //     o.LoggingFields = HttpLoggingFields.Duration | HttpLoggingFields.RequestPath | HttpLoggingFields.RequestQuery;
@@ -67,6 +69,7 @@ app.UseRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseOutputCache();
+app.MapGrpcService<ShowTimeGrpcService>();
 app.MapControllers();
 
 SampleData.Initialize(app);
