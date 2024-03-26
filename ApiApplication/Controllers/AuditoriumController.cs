@@ -24,7 +24,6 @@ public class AuditoriumController : ControllerBase
     [TranslateResultToActionResult]
     public async Task<Result<IEnumerable<AuditoriumDto>>> GetAll(CancellationToken cancellationToken)
     {
-        await Task.Delay(5000);
         return await _auditoriumService.GetAll(cancellationToken);
     }
 }

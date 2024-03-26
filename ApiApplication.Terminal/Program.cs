@@ -12,5 +12,3 @@ foreach (var reservation in reservationsResponse.Reservations)
 {
     Console.WriteLine(reservation.ReservationId);    
 }
-
-Console.WriteLine("Hello, World!");

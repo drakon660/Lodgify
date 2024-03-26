@@ -1,6 +1,5 @@
 ﻿using ApiApplication.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ApiApplication.Infrastructure
 {
@@ -39,9 +38,8 @@ namespace ApiApplication.Infrastructure
             {
                 build.HasKey(entry => entry.Id);
                 build.Property(entry => entry.Id).ValueGeneratedOnAdd();
-                build.HasOne(x => x.Auditorium).WithMany(x => x.Showtimes).HasForeignKey(x=>x.AuditoriumId);
-                build.HasOne(entry => entry.Movie).WithMany(entry => entry.Showtimes);
-                build.HasMany(entry => entry.Tickets).WithOne(entry => entry.Showtime).HasForeignKey(entry => entry.ShowtimeId);
+                build.HasOne(x => x.Auditorium).WithMany(x => x.Showtimes);
+                build.HasMany(entry => entry.Tickets).WithOne(entry => entry.Showtime);
             });
             
             modelBuilder.Entity<Movie>(build =>

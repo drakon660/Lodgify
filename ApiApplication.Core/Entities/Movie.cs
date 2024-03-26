@@ -6,8 +6,7 @@
         public string Title { get; protected set; }
         public string ImdbId { get; protected set; }
         public string Stars { get; protected set; }
-        public DateTime ReleaseDate { get; protected set; }
-        public List<Showtime> Showtimes { get; set; }
+        public DateTime ReleaseAtUtc { get; protected set; }
 
         public int LengthInMinutes { get; protected set; }
         protected Movie()
@@ -15,12 +14,12 @@
             
         }
         
-        private Movie(string title, string imdbId, string stars, DateTime releaseDate, int lengthInMinutes)
+        private Movie(string title, string imdbId, string stars, DateTime releaseAtUtc, int lengthInMinutes)
         {
             Title = title;
             ImdbId = imdbId;
             Stars = stars;
-            ReleaseDate = releaseDate;
+            ReleaseAtUtc = releaseAtUtc;
             LengthInMinutes = lengthInMinutes;
         }
 

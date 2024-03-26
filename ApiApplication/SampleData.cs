@@ -20,6 +20,10 @@ public class SampleData
         
         auditorium.SetSeats(Utils.Generate(2,3));
         
+        Auditorium auditorium3 = Auditorium.Create("E.T");
+        
+        auditorium3.SetSeats(Utils.Generate(5,5));
+        
         Auditorium auditorium2 = Auditorium.Create("Viper");
         
         auditorium2.SetSeats(Utils.Generate(10,20));
@@ -34,18 +38,19 @@ public class SampleData
             new DateTime(1999, 03, 04),189);
         
         var showtime = Showtime.Create(movie, new DateTime(2020, 03, 03, 11, 00, 00, DateTimeKind.Utc), auditorium);
+        var showtime3 = Showtime.Create(movie3, new DateTime(2020, 03, 03, 11, 00, 00, DateTimeKind.Utc), auditorium3);
         
         var currentDate = DateTime.UtcNow;
 
         var reservation = showtime.Value.ReserveSeats([Position.Create(2,3)], DateTime.UtcNow);
         
-        //var ticket = Ticket.Create(reservation.Value, currentDate.AddMinutes(2));
+        var ticket = Ticket.Create(reservation.Value, currentDate.AddMinutes(2));
         
         context.Auditoriums.AddRange(auditorium, auditorium2);
         context.Movies.AddRange(movie, movie2, movie3);
-        context.Showtimes.Add(showtime.Value);
+        context.Showtimes.AddRange(showtime.Value, showtime3.Value);
         context.Reservations.Add(reservation.Value);
-        //context.Tickets.Add(ticket.Value);
+        context.Tickets.Add(ticket.Value);
         
         context.SaveChanges();
     }

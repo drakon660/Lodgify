@@ -187,6 +187,7 @@ public class ShowTimeGrpcService : ShowtimeService.ShowtimeServiceBase
                     tickets.Select(x => new TicketDto
                     {
                         AuditoriumName = x.AuditoriumName,
+                        TicketId = x.TicketId.ToString(),
                         MovieTitle = x.MovieTitle,
                         Seats =
                         {

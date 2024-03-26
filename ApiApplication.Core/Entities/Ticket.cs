@@ -5,11 +5,8 @@ namespace ApiApplication.Core.Entities
     public class Ticket
     {
         public Guid Id { get; protected set; }
-        public int ShowtimeId { get; protected set; }
         public IReadOnlyList<Seat> Seats { get; protected set; }
-        
-        public DateTime CreatedTime { get; protected set; }
-        public bool Paid { get; set; }
+        public DateTime CreatedAtUtc { get; protected set; }
         public Showtime Showtime { get; protected set; }
 
         protected Ticket()
@@ -17,11 +14,11 @@ namespace ApiApplication.Core.Entities
             
         }
         
-        private Ticket(Showtime showtime, IReadOnlyList<Seat> seats, DateTime createdTime)
+        private Ticket(Showtime showtime, IReadOnlyList<Seat> seats, DateTime createdAtUtc)
         {
             Showtime = showtime;
             Seats = seats;
-            CreatedTime = createdTime;
+            CreatedAtUtc = createdAtUtc;
         }
         
         public static Result<Ticket> Create(Reservation reservation, DateTime currentDate)
@@ -30,7 +27,7 @@ namespace ApiApplication.Core.Entities
                 return Result.Invalid(new ValidationError("reservation expired"));
 
             if(reservation.IsConfirmed)
-                return Result.Invalid(new ValidationError("Ticket sold for that reservation"));
+                return Result.Invalid(new ValidationError("ticket sold for that reservation"));
             
             reservation.SetConfirmed();
             

@@ -1,5 +1,4 @@
-﻿using System.Xml.XPath;
-using ApiApplication.Core.ValueObjects;
+﻿using ApiApplication.Core.ValueObjects;
 using Ardalis.Result;
 
 namespace ApiApplication.Core.Entities
@@ -8,8 +7,7 @@ namespace ApiApplication.Core.Entities
     {
         public int Id { get; protected set; }
         public Movie Movie { get; protected set; }
-        public DateTime SessionDate { get; protected set; }
-        public int AuditoriumId { get; protected set; }
+        public DateTime SessionAtUtc { get; protected set; }
         public Auditorium Auditorium { get; protected set; }
 
         private readonly List<Reservation> _reservations = new ();
@@ -24,12 +22,11 @@ namespace ApiApplication.Core.Entities
             
         }
 
-        private Showtime(Movie movie, DateTime sessionDate, Auditorium auditorium)
+        private Showtime(Movie movie, DateTime sessionAtUtc, Auditorium auditorium)
         {
             Movie = movie;
-            SessionDate = sessionDate;
+            SessionAtUtc = sessionAtUtc;
             Auditorium = auditorium;
-            AuditoriumId = auditorium.Id;
         }
 
         public IEnumerable<Seat> FreeSeats()
