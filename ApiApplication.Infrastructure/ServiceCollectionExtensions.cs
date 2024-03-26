@@ -10,15 +10,15 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCinema(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddTransient<IShowtimeRepository, ShowtimeRepository>();
-        serviceCollection.AddTransient<IMovieRepository, MovieRepository>();
-        serviceCollection.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
-        serviceCollection.AddTransient<IReservationRepository, ReservationRepository>();
-        serviceCollection.AddTransient<ITicketRepository, TicketRepository>();
+        serviceCollection.AddScoped<IShowtimeRepository, ShowtimeRepository>();
+        serviceCollection.AddScoped<IMovieRepository, MovieRepository>();
+        serviceCollection.AddScoped<IAuditoriumsRepository, AuditoriumsRepository>();
+        serviceCollection.AddScoped<IReservationRepository, ReservationRepository>();
+        serviceCollection.AddScoped<ITicketRepository, TicketRepository>();
         
-        serviceCollection.AddTransient<IShowtimeService, ShowtimeService>();
-        serviceCollection.AddTransient<IMovieService, MovieService>();
-        serviceCollection.AddTransient<IAuditoriumService, AuditoriumService>();
+        serviceCollection.AddScoped<IShowtimeService, ShowtimeService>();
+        serviceCollection.AddScoped<IMovieService, MovieService>();
+        serviceCollection.AddScoped<IAuditoriumService, AuditoriumService>();
         
         return serviceCollection;
     }
