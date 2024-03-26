@@ -6,7 +6,6 @@ using ApiApplication.Core.Services;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ApiApplication.Controllers;
 
@@ -25,6 +24,7 @@ public class AuditoriumController : ControllerBase
     [TranslateResultToActionResult]
     public async Task<Result<IEnumerable<AuditoriumDto>>> GetAll(CancellationToken cancellationToken)
     {
+        await Task.Delay(5000);
         return await _auditoriumService.GetAll(cancellationToken);
     }
 }

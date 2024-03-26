@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using ApiApplication;
@@ -6,9 +7,9 @@ using ApiApplication.Infrastructure;
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -40,6 +41,19 @@ builder.Services.AddCinema();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddStackExchangeRedisOutputCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("CinemaCache");
+    options.InstanceName = "Cinema";
+});
+
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => 
+        builder.Expire(TimeSpan.FromSeconds(20)));
+});
+
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -52,6 +66,7 @@ app.UseRequestLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseOutputCache();
 app.MapControllers();
 
 SampleData.Initialize(app);

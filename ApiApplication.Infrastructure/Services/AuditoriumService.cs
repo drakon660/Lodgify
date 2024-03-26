@@ -9,20 +9,16 @@ namespace ApiApplication.Infrastructure.Services;
 
 public class AuditoriumService : IAuditoriumService
 {
-    private readonly ILogger<AuditoriumService> _logger;
     private readonly IMapper _mapper;
     private readonly IAuditoriumsRepository _auditoriumsRepository;
 
-    public AuditoriumService(ILogger<AuditoriumService> logger, IMapper mapper, IAuditoriumsRepository auditoriumsRepository)
+    public AuditoriumService(IMapper mapper, IAuditoriumsRepository auditoriumsRepository)
     {
-        _logger = logger;
         _mapper = mapper;
         _auditoriumsRepository = auditoriumsRepository;
     }
     public async Task<Result<IEnumerable<AuditoriumDto>>> GetAll(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("GetAll");
-        
         var auditoriums = await _auditoriumsRepository.GetAll(cancellationToken);
 
         if (!auditoriums.Any())
