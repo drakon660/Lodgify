@@ -1,4 +1,5 @@
 ﻿
+using ApiApplication.Core.ValueObjects;
 using Ardalis.Result;
 
 namespace ApiApplication.Core.Entities;

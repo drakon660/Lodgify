@@ -1,5 +1,6 @@
 ﻿using ApiApplication.Core.Dtos;
 using ApiApplication.Core.Entities;
+using ApiApplication.Core.ValueObjects;
 using AutoMapper;
 
 namespace ApiApplication.Core.Mappings;
@@ -11,5 +12,7 @@ public class SeatsProfile : Profile
         CreateMap<Seat, SeatDto>()
             .ForMember(x=>x.RowNumber, x=>x.MapFrom(y=>y.Position.RowNumber))
             .ForMember(x=>x.SeatNumber, x=>x.MapFrom(y=>y.Position.SeatNumber));
+
+        CreateMap<SeatDto, Position>();
     }
 }

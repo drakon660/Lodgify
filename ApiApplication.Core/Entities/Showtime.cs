@@ -9,7 +9,6 @@ namespace ApiApplication.Core.Entities
         public int Id { get; protected set; }
         public Movie Movie { get; protected set; }
         public DateTime SessionDate { get; protected set; }
-        
         public int AuditoriumId { get; protected set; }
         public Auditorium Auditorium { get; protected set; }
 
@@ -74,10 +73,10 @@ namespace ApiApplication.Core.Entities
                 return Result.Invalid(new ValidationError("seat sold"));
             }
             
-            var reservations = _reservations.Where(x => x.ContainsSeatsNumbers(seatsResults.Seats).Any());
+            var reservations = _reservations.Where(x => x.ContainsSeatsNumbers(seatsResults.Seats).Any()).ToList();
             
-            if(reservations.Any())
-                return Result.Invalid(new ValidationError($"seat {string.Join(' ', reservations.First().Seats.Select(x=>x.Position))} already reserved"));
+            if(reservations.Count > 0)
+                return Result.Invalid(new ValidationError($"seat {string.Join(' ', reservations.SelectMany(x=>x.Seats).Select(x=>x.Position))} already reserved"));
             
             var reservationResult = Reservation.Create(this, seatsResults.Seats, reservationDate);
         

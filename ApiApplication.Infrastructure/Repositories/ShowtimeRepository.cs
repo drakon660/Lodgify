@@ -31,6 +31,7 @@ public class ShowtimeRepository : IShowtimeRepository
             .Include(x=>x.Movie)
             .Include(x=>x.Reservations)
             .ThenInclude(x=>x.Seats)
+            .Where(x=>x.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

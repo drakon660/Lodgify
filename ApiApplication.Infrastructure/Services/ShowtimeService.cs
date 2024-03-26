@@ -5,7 +5,6 @@ using ApiApplication.Core.Services;
 using ApiApplication.Core.ValueObjects;
 using Ardalis.Result;
 using AutoMapper;
-//using CSharpFunctionalExtensions;
 
 namespace ApiApplication.Infrastructure.Services;
 
@@ -56,7 +55,14 @@ public class ShowtimeService : IShowtimeService
     public async Task<Result<CreatedShowtimeDto>> CreateShowtime(CreateShowtimeDto createShowtimeDto, CancellationToken cancellationToken)
     {
         var movie = await _movieRepository.GetById(createShowtimeDto.MovieId, cancellationToken);
+
+        if (movie is null)
+            return Result.NotFound("movie not found");
+        
         var auditorium = await _auditoriumsRepository.GetById(createShowtimeDto.AuditoriumId, cancellationToken);
+        
+        if (auditorium is null)
+            return Result.NotFound("auditorium not found");
 
         var showtimeResult = Showtime.Create(movie, createShowtimeDto.SessionDate, auditorium);
 
@@ -72,8 +78,11 @@ public class ShowtimeService : IShowtimeService
     public async Task<Result<ReservationDto>> ReserveShowtime(CreateReservationDto createReservationDto, CancellationToken cancellationToken)
     {
         var showTime = await _showtimeRepository.GetById(createReservationDto.ShowTimeId, cancellationToken);
+
+        if (showTime is null)
+            return Result.NotFound("showTime not found");
         
-        var seatsPositions = createReservationDto.Seats.Select(x => Position.Create(x.RowNumber, x.SeatNumber)).ToList();
+        var seatsPositions = _mapper.Map<IEnumerable<Position>>(createReservationDto.Seats).ToList(); 
         
         var reservationResult =
             showTime.ReserveSeats(seatsPositions, DateTime.UtcNow);
@@ -101,6 +110,9 @@ public class ShowtimeService : IShowtimeService
     {
         var reservation = await _reservationRepository.GetById(reservationId, cancellationToken);
 
+        if (reservation is null)
+            return Result.NotFound("reservation not found");
+        
         var ticketResult = Ticket.Create(reservation, DateTime.UtcNow);
         if (ticketResult.IsSuccess)
         {

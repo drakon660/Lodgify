@@ -36,8 +36,8 @@ public class SampleData
         var showtime = Showtime.Create(movie, new DateTime(2020, 03, 03, 11, 00, 00, DateTimeKind.Utc), auditorium);
         
         var currentDate = DateTime.UtcNow;
-        
-        var reservation = Reservation.Create(showtime.Value,[Seat.Create(Position.Create(3,4))], DateTime.UtcNow);
+
+        var reservation = showtime.Value.ReserveSeats([Position.Create(2,3)], DateTime.UtcNow);
         
         //var ticket = Ticket.Create(reservation.Value, currentDate.AddMinutes(2));
         
