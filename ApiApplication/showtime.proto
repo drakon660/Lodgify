@@ -6,9 +6,11 @@ package grpc;
 // Service definition
 service ShowtimeService {
   rpc CreateShowtime(CreateShowtimeRequest) returns (CreatedShowtimeResponse);
-  rpc GetAll(GetAllRequest) returns (GetAllResponse);
+  rpc GetAllShowtimes(GetAllRequest) returns (GetAllResponse);
   rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
+  rpc GetAllReservations(GetAllReservationsRequest) returns (GetAllReservationsResponse);
   rpc ConfirmTicket(ConfirmTicketRequest) returns (ConfirmTicketResponse);
+  rpc GetAllTickets(GetAllTicketsRequest) returns (GetAllTicketsResponse);
 }
 
 // Request message
@@ -38,6 +40,18 @@ message GetAllRequest {}
 message GetAllResponse {
   repeated ShowtimeDto showtimes = 1;
   StatusDto status = 2;
+}
+
+// Define the GetAllReservationsResponse message
+message GetAllReservationsResponse {
+  // List of reservations returned by the endpoint
+  repeated ReservationDto reservations = 1;
+  StatusDto status = 2;
+}
+
+// Define the GetAllReservationsRequest message (if needed)
+message GetAllReservationsRequest {
+  // Any request parameters could be included here if required
 }
 
 // Showtime DTO message
@@ -94,4 +108,16 @@ message TicketDto {
   string movieTitle = 2;
   string auditoriumName = 3;
   repeated SeatDto seats = 4;
+}
+
+// Define a message for the response data returned by GetAllTickets endpoint
+message GetAllTicketsResponse {
+  // List of tickets returned by the endpoint
+  repeated TicketDto tickets = 1;
+  StatusDto status = 2;
+}
+
+// Define the GetAllTicketsRequest message (if needed)
+message GetAllTicketsRequest {
+  // Any request parameters could be included here if required
 }

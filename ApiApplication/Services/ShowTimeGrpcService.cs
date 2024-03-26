@@ -54,8 +54,7 @@ public class ShowTimeGrpcService : ShowtimeService.ShowtimeServiceBase
             }
         };
     }
-
-    public override async Task<GetAllResponse> GetAll(GetAllRequest request, ServerCallContext context)
+    public override async Task<GetAllResponse> GetAllShowtimes(GetAllRequest request, ServerCallContext context)
     {
         var showtimesResult = await _showtimeService.GetAllShowtimes(context.CancellationToken);
         
@@ -137,7 +136,6 @@ public class ShowTimeGrpcService : ShowtimeService.ShowtimeServiceBase
             }
         };
     }
-
     public override async Task<ConfirmTicketResponse> ConfirmTicket(ConfirmTicketRequest request, ServerCallContext context)
     {
         var ticketResult = await 
@@ -171,6 +169,83 @@ public class ShowTimeGrpcService : ShowtimeService.ShowtimeServiceBase
             {
                 Code = 1,
                 Message = string.Join("\r\n", ticketResult.ValidationErrors.Select(x => x.ErrorMessage))
+            }
+        };
+    }
+
+    public override async Task<GetAllTicketsResponse> GetAllTickets(GetAllTicketsRequest request, ServerCallContext context)
+    {
+        var ticketsResult = await _showtimeService.GetAllTickets(context.CancellationToken);
+    
+        if (ticketsResult.IsSuccess)
+        {
+            var tickets = ticketsResult.Value;
+            return new GetAllTicketsResponse
+            {
+                Tickets =
+                {
+                    tickets.Select(x => new TicketDto
+                    {
+                        AuditoriumName = x.AuditoriumName,
+                        MovieTitle = x.MovieTitle,
+                        Seats =
+                        {
+                            x.Seats.Select(y => new SeatDto
+                            {
+                                RowNumber = y.RowNumber,
+                                SeatNumber = y.SeatNumber
+                            })
+                        }
+                    })
+                }
+            };
+        }
+
+        return new GetAllTicketsResponse
+        {
+            Status = new StatusDto
+            {
+                Code = 1,
+                Message = ticketsResult.Status.ToString()
+            }
+        };
+    }
+
+    public override async Task<GetAllReservationsResponse> GetAllReservations(GetAllReservationsRequest request, ServerCallContext context)
+    {
+        var reservationsResult = await _showtimeService.GetAllReservations(context.CancellationToken);
+
+        if (reservationsResult.IsSuccess)
+        {
+            var reservations = reservationsResult.Value;
+
+            return new GetAllReservationsResponse
+            {
+                Reservations =
+                {
+                    reservations.Select(x => new ReservationDto
+                    {
+                        ReservationId = x.ReservationId.ToString(),
+                        AuditoriumName = x.AuditoriumName,
+                        MovieTitle = x.MovieTitle,
+                        IsConfirmed = x.IsConfirmed,
+                        IsExpired = x.IsExpired,
+                        Seats = {  x.Seats.Select(y => new SeatDto
+                        {
+                            RowNumber = y.RowNumber,
+                            SeatNumber = y.SeatNumber
+                        }) }
+                    })
+                }
+            };
+        }
+        
+        return new GetAllReservationsResponse
+        {
+            Status = new StatusDto
+            {
+                Code = 1,
+                Message = reservationsResult.Status.ToString()
             }
         };
     }
