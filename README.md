@@ -1,13 +1,6 @@
 ## Movies challenge
 ---
 
-Please follow the instructions included here. When you are finished, zip it, use a cloud service to upload it and send the link to us by **email**.
-(Remeber to set the zip file permission to **Read-only to anyone**, we suggest Google Drive, but Dropbox, OneDrive, etc is also ok.)
-
-Thank you and good luck!
-
----
-
 ## Context
 
 We want a C# .Net Core Web Application API project that meets our requirements. We provide you with the solution skeleton and a few features implemented to save time.
