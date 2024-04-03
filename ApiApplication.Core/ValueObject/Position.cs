@@ -4,8 +4,8 @@ namespace ApiApplication.Core.ValueObjects;
 
 public class Position : ValueObject<Position>
 {
-    public ushort RowNumber { get; }
-    public ushort SeatNumber { get; }
+    public ushort RowNumber { get; protected set; }
+    public ushort SeatNumber { get; protected set; }
 
     protected Position()
     {
