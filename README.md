@@ -1,6 +1,4 @@
 ## Movies challenge
-Welcome to the tech challenge for Lodgify’s Backend developers candidates.
-
 ---
 
 Please follow the instructions included here. When you are finished, zip it, use a cloud service to upload it and send the link to us by **email**.
@@ -81,18 +79,3 @@ We will like to have a cache layer to cache the response from the Provided API b
 
 We want to track the execution time of each request done to the service and log the time in the Console.
 By default, we set the loggers to log in to the Console, so you only need to worry where to put the Logger in the code.
-
-### Provided API
-
-We know that [**Provided API**](http://localhost:7172/swagger/index.html) may have some configuration issues, and we will like them to be found and fixed, if possible.
-
-## Add the Request to cUrls file
-
-We added a file next to this readme named `cUrls.txt`.
-Please add a curl command for each of the commands and queries that you implemented to this file.
-
----
-
-### Feedback
-
-You can add any feedback you want to send us in the file `Feedback.md` located next to this file. If you find something you cannot do or fix, add it to this document.
